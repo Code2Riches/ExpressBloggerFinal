@@ -21,6 +21,7 @@ router.get("/get-one-example", async function (req, res, next) {
   });
 });
 
+// Get One ID
 router.get('/get-one/:id', async function (req, res, next) {
   try {
     const blogId = req.params.id
@@ -41,5 +42,34 @@ router.get('/get-one/:id', async function (req, res, next) {
     })
   }
 });
+
+// 
+router.post('/create-one', async function (req, res, next) {
+  const title = req.body.title
+  const text = req.body.text
+  const author = req.body.author
+  const categories = req.body.categories
+  const email = req.body.email
+  const starRating = req.body.startRating
+  const id = uuid()
+
+  const blogData = {
+      title,
+      text,
+      author,
+      categories,
+      email,
+      id: id,
+      createdAt: new Date(),
+      lastModified: new Date(),
+  }
+ const blogPost = await db().collection("blogs").insert(blogData)
+ res.json({
+   success: true,
+   post: blogPost
+ })
+});
+
+
 
 module.exports = router;
