@@ -21,7 +21,7 @@ router.get("/get-one-example", async function (req, res, next) {
   });
 });
 
-// Get One ID
+// GET One ID
 router.get('/get-one/:id', async function (req, res, next) {
   try {
     const blogId = req.params.id
@@ -43,7 +43,7 @@ router.get('/get-one/:id', async function (req, res, next) {
   }
 });
 
-// 
+// POST One
 router.post('/create-one', async function (req, res, next) {
   const title = req.body.title
   const text = req.body.text
@@ -70,6 +70,37 @@ router.post('/create-one', async function (req, res, next) {
  })
 });
 
+// PUT One
+router.put('/update-one/:id', async function (req, res, next) {
+try {
+  const blogId = req.params.id
+  const title = req.body.title
+  const text = req.body.text
+  const author = req.body.author
+  const categories = req.body.categories
+  const email = req.body.email
+  const starRating = req.body.starRating
+  const lastModified = new Date()
 
+  const blogPost = await db().collection("blogs").update({
+    id: blogId
+  }, {
+    $set: {
+      "starRating": starRating,
+      "lastModified": lastModified
+    }
+  })
+   res.json({
+     success: true,
+     update: blogPost
+   })
+}catch (err) {
+  console.log(err.name)
+  res.json({
+    success: false,
+    error: err.toString()
+  })
+}
+});
 
 module.exports = router;
