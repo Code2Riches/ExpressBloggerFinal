@@ -54,53 +54,73 @@ router.post('/create-one', async function (req, res, next) {
   const id = uuid()
 
   const blogData = {
-      title,
-      text,
-      author,
-      categories,
-      email,
-      id: id,
-      createdAt: new Date(),
-      lastModified: new Date(),
+    title,
+    text,
+    author,
+    categories,
+    email,
+    id: id,
+    createdAt: new Date(),
+    lastModified: new Date(),
   }
- const blogPost = await db().collection("blogs").insert(blogData)
- res.json({
-   success: true,
-   post: blogPost
- })
+  const blogPost = await db().collection("blogs").insert(blogData)
+  res.json({
+    success: true,
+    post: blogPost
+  })
 });
 
 // PUT One
 router.put('/update-one/:id', async function (req, res, next) {
-try {
-  const blogId = req.params.id
-  const title = req.body.title
-  const text = req.body.text
-  const author = req.body.author
-  const categories = req.body.categories
-  const email = req.body.email
-  const starRating = req.body.starRating
-  const lastModified = new Date()
+  try {
+    const blogId = req.params.id
+    const title = req.body.title
+    const text = req.body.text
+    const author = req.body.author
+    const categories = req.body.categories
+    const email = req.body.email
+    const starRating = req.body.starRating
+    const lastModified = new Date()
 
-  const blogPost = await db().collection("blogs").update({
-    id: blogId
-  }, {
-    $set: {
-      "starRating": starRating,
-      "lastModified": lastModified
-    }
-  })
-   res.json({
-     success: true,
-     update: blogPost
-   })
-}catch (err) {
-  console.log(err.name)
-  res.json({
-    success: false,
-    error: err.toString()
-  })
-}
+    const blogPost = await db().collection("blogs").update({
+      id: blogId
+    }, {
+      $set: {
+        "starRating": starRating,
+        "lastModified": lastModified
+      }
+    })
+    res.json({
+      success: true,
+      update: blogPost
+    })
+  } catch (err) {
+    console.log(err.name)
+    res.json({
+      success: false,
+      error: err.toString()
+    })
+  }
+});
+
+// Delete
+router.delete('/delete-one/:id', async function (req, res, next) {
+  try {
+    const blogId = req.params.id
+
+    const blogPost = await db().collection("blogs").deleteOne({
+      id: blogId
+    })
+    res.json({
+      success: true
+    })
+  } catch (err) {
+    console.log(err.name)
+    res.json({
+      success: false,
+      error: err.toString()
+    })
+  }
 });
 
 module.exports = router;
